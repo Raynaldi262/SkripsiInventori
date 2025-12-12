@@ -25,6 +25,18 @@ confirm_logged_in();
   }
 </style>
 
+<?php
+$notif = '';
+
+if (isset($_GET['success'])) {
+    $notif = 'success';
+}
+
+if (isset($_GET['error'])) {
+    $notif = 'error';
+}
+?>
+
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
     <!-- Right navbar -->
@@ -123,6 +135,7 @@ confirm_logged_in();
   <script src="../plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
   <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 <script>

@@ -16,7 +16,27 @@ if (isset($_POST['btnlogin'])) {
         if ($numrows == 1) {   // kalau hasilnya ktmu dan 1
             $user = mysqli_fetch_assoc($result);
 
-                // msukin data yg login ke session
+            
+        $query = "SELECT nama_barang, jumlah FROM gudang WHERE jumlah <= 5";
+        $result = mysqli_query($conn, $query);
+
+        $messages = [];
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $messages[] = "Stok " . $row['nama_barang'] . " tinggal " . $row['jumlah'];
+        }
+
+        if (!empty($messages)) {
+            $_SESSION['alerts'][] = [
+                "icon" => "warning",
+                "message" => implode("<br>", $messages) // gabung jadi 1 string
+            ];
+        }
+
+        
+
+        // var_dump($_SESSION['alerts']); die;
+            // msukin data yg login ke session
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['role_id'] = $user['level'];
 
@@ -24,7 +44,7 @@ if (isset($_POST['btnlogin'])) {
                 <!-- login berhasil  -->
                 <script type="text/javascript">
                     alert("Selamat datang ");
-                    window.location = "../admin/index.php";
+                    window.location = "../admin/index.php?success=1";
                 </script>
             <?php
         }

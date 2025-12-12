@@ -1,4 +1,5 @@
 <?php require('../model/AdminUser.php'); ?>
+
 <!-- Font Awesome -->
 <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
 <style>
@@ -187,4 +188,32 @@
     // $(".nav-link").attr('id', active).addClass('active');
     var a = $(".nav-link#" + active).addClass('active');
   });
+</script>
+
+
+
+<?php
+$alerts = $_SESSION['alerts'] ?? [];
+?>
+
+<script>
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",    
+    showConfirmButton: false,   // button Tutup tidak diperlukan
+    closeButton: true,          // → munculkan tombol X
+    timer: 0,                   // tidak auto-close
+    timerProgressBar: false
+});
+
+<?php foreach ($alerts as $a): ?>
+Toast.fire({
+    icon: "<?= $a['icon'] ?>",
+    html: "<?= $a['message'] ?>"
+}).then(() => {
+    // Hapus session lewat AJAX ketika tombol tutup ditekan
+    fetch('clear_alerts.php')
+        .then(() => console.log("Session alert cleared"));
+});
+<?php endforeach; ?>
 </script>

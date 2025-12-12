@@ -14,3 +14,4 @@ function msg($pesan, $url)
     </script>
 <?php
 }
+
