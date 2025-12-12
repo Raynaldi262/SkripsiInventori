@@ -17,7 +17,7 @@ if (isset($_POST['btnlogin'])) {
             $user = mysqli_fetch_assoc($result);
 
             
-        $query = "SELECT nama_barang, jumlah FROM gudang WHERE jumlah <= 5";
+        $query = "SELECT nama_barang, jumlah FROM gudang WHERE jumlah <= 20";
         $result = mysqli_query($conn, $query);
 
         $messages = [];

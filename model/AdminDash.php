@@ -5,6 +5,10 @@ require('../session/session.php');
 $sql = "SELECT * FROM  users a WHERE id = " . $_SESSION['admin_id'] . "";
 $admin_data = mysqli_query($conn, $sql);
 
+$sql = "SELECT * FROM  gudang";
+$gudang = mysqli_query($conn, $sql);
+
+
 function msg($pesan, $url)
 {
 ?>

@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
+
 </head>
 
 <?php
@@ -23,6 +26,11 @@ confirm_logged_in();
     max-height: 200px;
     max-width: 200px;
   }
+  
+#chart-container {
+    width: 100%;
+    height: 350px;
+}
 </style>
 
 <?php
@@ -60,7 +68,48 @@ if (isset($_GET['error'])) {
       <!-- Main content -->
       <section class="content">
         <div class="container-fluid">
+          <!-- <div id="chart-container">
+              <canvas id="myChart" height="120"></canvas>
+          </div> -->
+          
           <div class="row">
+            <div class="col-12">
+                            <div class="card">
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                            
+                                    <table id="dataAdmin" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr align="center">
+                                                <th>No</th>
+                                                <th>Kode Barang</th>
+                                                <th>Nama Barang</th>
+                                                <th>Jenis Barang</th>
+                                                <th>Jumlah Barang</th>
+                                                <th>Satuan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $i = 1;
+                                            while ($data = mysqli_fetch_array($gudang)) { ?>
+                                                <tr align="center">
+                                                    <td><?php echo $i ?></td>
+                                                    <td><?php echo $data['kode_barang']; ?></td>
+                                                    <td><?php echo $data['nama_barang']; ?></td>
+                                                    <td><?php echo $data['jenis_barang']; ?></td>
+                                                    <td><?php echo $data['jumlah']; ?></td>
+                                                    <td><?php echo $data['satuan']; ?></td>
+                                                </tr>
+                                            <?php $i++;
+                                            } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+
             <?php if ($_SESSION['role_id'] == 1) { ?>
             <div class="col-lg-3 col-6">
               
@@ -136,12 +185,79 @@ if (isset($_GET['error'])) {
   <!-- Bootstrap 4 -->
   <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+
+
+<script>
+          $(function() {
+            $("#dataAdmin").DataTable({
+                "scrollX": true,
+                "responsive": false,
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                "autoWidth": false,
+            })
+        });
+
+        
+fetch("../model/data_chart.php")
+    .then(res => res.json())
+    .then(data => {
+        const ctx = document.getElementById("myChart").getContext("2d");
+        const dynamicColors = data.labels.map(() => {
+                const r = Math.floor(Math.random() * 255);
+                const g = Math.floor(Math.random() * 255);
+                const b = Math.floor(Math.random() * 255);
+                return `rgba(${r}, ${g}, ${b}, 0.6)`;
+            });
+        
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: "Stok Barang diGudang",
+                    data: data.values,
+                    backgroundColor: dynamicColors,
+                    borderColor: dynamicColors.map(color =>
+                            color.replace("0.6", "1")
+                        ),
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Jumlah"
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Nama Barang"
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
 
 <script>
   $(function() {
     $("#include-navbar").load("left-navbar.php");
   });
 </script>
+  </body>
+
 
 </html>
