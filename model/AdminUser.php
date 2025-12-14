@@ -10,6 +10,16 @@ $result = mysqli_query($conn, $sql);
 $admin = mysqli_fetch_assoc($result);
 
 
+$sql = "SELECT count(*) jumlah FROM  gudang a WHERE  jumlah  <= 20";
+$result = mysqli_query($conn, $sql);
+$jumlah = mysqli_fetch_assoc($result);
+
+$jumlah_notif = $jumlah['jumlah'];
+
+$sql = "SELECT *  FROM  gudang a WHERE  jumlah  <= 20";
+$notifikasi = mysqli_query($conn, $sql);
+
+
 if (isset($_POST['insert_admin'])) {
     insertAdmin($conn);
 }

@@ -47,7 +47,41 @@ require('../model/laporan.php');
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                            
+                                <form method="POST">
+                                        <table align="center" border="0" bordercolor="black">
+                                            <tr>
+                                                <td><b>Dari Tanggal</b></td>
+                                                <td>
+                                                    <input type="date" id="start" name="start" required>
+                                                </td>
+                                                <td><b>Sampai Tanggal</b></td>
+                                                <td><input type="date" id="end" name="end" required></td>
+                                                <td><input type="submit" value="Cari" class="btn-info" id="cari" name="search"></td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                    <br>
+                                    <?php
+                                    if (isset($_POST['search'])) {
+                                        $start = date("d-m-Y", strtotime($_POST['start']));
+                                        $end = date("d-m-Y", strtotime($_POST['end']));
+                                    ?> <p align="center" class="title"><?php
+                                                                        echo 'Data tanggal ' . $start . ' sampai tanggal ' . $end;  ?>
+                                        </p><?php ?>
+                                        <form action="">
+                                            <input type='hidden' name='ins_start' id='ins_start' value='<?php echo $_POST['start']; ?>'>
+                                            <input type='hidden' name='ins_end' id='ins_end' value='<?php echo $_POST['end']; ?>'>
+                                        </form>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <form action="">
+                                            <input type='hidden' name='ins_start' id='ins_start' value=''>
+                                            <input type='hidden' name='ins_end' id='ins_end' value=''>
+                                        </form>
+                                    <?php
+                                    } ?>
+                                    <br>
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr align="center">
@@ -60,14 +94,31 @@ require('../model/laporan.php');
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $i = 1;
+                                        <?php $i = 1;
+                                            if (isset($_POST['search'])) {
+                                                $start = $_POST['start'];
+                                                $end = $_POST['end'];
+
+                                                $sql = "SELECT a.kode_barang, a.nama_barang, a.jenis_barang, a.satuan,  COALESCE(b.masuk, 0),  COALESCE(c.keluar, 0) , (COALESCE(b.masuk, 0) - COALESCE(c.keluar, 0)) as jumlah  FROM gudang as a
+                                                left join (select sum(jumlah) as masuk , kode_barang from barang_masuk where tanggal >= '" . $start . " 00:00:00' and tanggal <= '" . $end . " 00:00:00' group by kode_barang) as b on a.kode_barang = b.kode_barang
+                                                left join (select sum(jumlah) as keluar , kode_barang from barang_keluar where tanggal >= '" . $start . " 00:00:00' and tanggal <= '" . $end . " 00:00:00' group by kode_barang) as c on a.kode_barang = c.kode_barang ";
+                                                $gudang = mysqli_query($conn, $sql);
+                                                
+                                            } else {
+                                                $sql = "select *
+                                                        from gudang";
+                                                $gudang = mysqli_query($conn, $sql);
+                                                
+                                            }
                                             while ($data = mysqli_fetch_array($gudang)) { ?>
                                                 <tr align="center">
                                                     <td><?php echo $i ?></td>
                                                     <td><?php echo $data['kode_barang']; ?></td>
                                                     <td><?php echo $data['nama_barang']; ?></td>
                                                     <td><?php echo $data['jenis_barang']; ?></td>
+                                                    
                                                     <td><?php echo $data['jumlah']; ?></td>
+
                                                     <td><?php echo $data['satuan']; ?></td>
                                                 </tr>
                                             <?php $i++;
@@ -194,7 +245,19 @@ require('../model/laporan.php');
             exportOptions: {
                 columns: [0,1,2,3,4,5], // Kolom yang diexport
                 modifier: { page: 'current' }
-            }
+            },
+            action: function (e, dt, button, config) {
+
+       
+var start = $('#ins_start').val();
+var end = $('#ins_end').val();
+var msgTop = "Laporan Barang Masuk Tanggal " + start + " sampai " + end;
+
+config.messageTop = msgTop;
+
+// 🔹 Jalankan export default
+$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
+}
         }
     ]
 });

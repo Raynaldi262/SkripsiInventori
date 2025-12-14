@@ -19,30 +19,79 @@
     font-size: 11px;
   }
 
+  .navbar-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 10px;
+}
+
   /* span {
     color: white !important;
   } */
 </style>
+
 <nav class="main-header navbar navbar-expand navbar-dark bg-primary">
-  <!-- Left navbar links -->
+
+  <!-- LEFT -->
   <ul class="navbar-nav">
     <li class="nav-item d-none d-sm-inline-block">
       <a href="index.php" class="nav-link">Home</a>
     </li>
   </ul>
-  <ul class="navbar-nav ml-auto">
+
+  <!-- RIGHT -->
+  <ul class="navbar-nav ml-auto align-items-center">
+
+    <!-- NOTIF -->
     <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#" style="margin-top: -8px;">
+      <a class="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true">
+        <i class="fa-solid fa-bell"></i>
+
+        <?php if ($jumlah_notif > 0): ?>
+          <span class="badge badge-danger navbar-badge">
+            <?= $jumlah_notif ?>
+          </span>
+        <?php endif; ?>
+      </a>
+
+      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <span class="dropdown-header">Notifikasi</span>
+
+        <?php if ($jumlah_notif > 0): ?>
+          <?php foreach ($notifikasi as $n): ?>
+            <a href="#" class="dropdown-item">
+              <span class="float-right text-muted text-sm">
+                <?= $n['nama_barang'] ." sisa ". $n['jumlah'] . " " .$n['satuan'] ?>
+              </span>
+            </a>
+            <div class="dropdown-divider"></div>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <span class="dropdown-item text-muted">Tidak ada notifikasi</span>
+        <?php endif; ?>
+      </div>
+    </li>
+
+    <!-- PROFILE -->
+    <li class="nav-item dropdown">
+      <a class="nav-link" data-toggle="dropdown" href="#">
         <div class="d-sm-inline-block user-panel">
-          <img src="../dist/img/admin/<?php echo $admin['foto'] ?>" class="img-circle elevation-2" alt="User Image">
-          <span class="brand-text font-weight-light dropdown-toggle"><b><?php echo $admin['nama'] ?></b></span>
+          <img src="../dist/img/admin/<?php echo $admin['foto'] ?>"
+               class="img-circle elevation-2" alt="User Image">
+          <span class="dropdown-toggle">
+            <b><?php echo $admin['nama'] ?></b>
+          </span>
         </div>
       </a>
-      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="width: 100px;">
-        <a href="../login_admin/logout_admin.php" class="dropdown-item" id="exit">
-          <p>Keluar</p>
+
+      <div class="dropdown-menu dropdown-menu-right">
+        <a href="../login_admin/logout_admin.php" class="dropdown-item">
+          Keluar
         </a>
+      </div>
     </li>
+
   </ul>
 </nav>
 <!-- /.navbar -->
@@ -196,7 +245,7 @@
 $alerts = $_SESSION['alerts'] ?? [];
 ?>
 
-<script>
+<!-- <script>
 const Toast = Swal.mixin({
     toast: true,
     position: "top-end",    
@@ -206,7 +255,7 @@ const Toast = Swal.mixin({
     timerProgressBar: false
 });
 
-<?php foreach ($alerts as $a): ?>
+<?php foreach ($alerts as $a): ?>ss
 Toast.fire({
     icon: "<?= $a['icon'] ?>",
     html: "<?= $a['message'] ?>"
@@ -216,4 +265,4 @@ Toast.fire({
         .then(() => console.log("Session alert cleared"));
 });
 <?php endforeach; ?>
-</script>
+</script> -->

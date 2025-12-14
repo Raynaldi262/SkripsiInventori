@@ -74,6 +74,7 @@ if (isset($_GET['error'])) {
           
           <div class="row">
             <div class="col-12">
+            <?php if ($_SESSION['role_id'] != 3) { ?>
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -109,7 +110,7 @@ if (isset($_GET['error'])) {
                             </div>
                             <!-- /.card -->
                         </div>
-
+            <?php } ?>
             <?php if ($_SESSION['role_id'] == 1) { ?>
             <div class="col-lg-3 col-6">
               
