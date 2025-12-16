@@ -19,11 +19,16 @@
     font-size: 11px;
   }
 
-  .navbar-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    font-size: 10px;
+.navbar-badge {
+  position: absolute;
+  top: 5px;
+  right: 2px;
+  font-size: 11px;
+  min-width: 18px;       /* 🔑 important */
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  padding: 0 4px;
 }
 
   /* span {
@@ -31,7 +36,7 @@
   } */
 </style>
 
-<nav class="main-header navbar navbar-expand navbar-dark bg-primary">
+<nav class="main-header navbar navbar-expand navbar-dark bg-primary navbar-lg">
 
   <!-- LEFT -->
   <ul class="navbar-nav">
@@ -46,7 +51,7 @@
     <!-- NOTIF -->
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true">
-        <i class="fa-solid fa-bell"></i>
+        <i class="fas fa-bell fa-lg"></i>
 
         <?php if ($jumlah_notif > 0): ?>
           <span class="badge badge-danger navbar-badge">
@@ -115,7 +120,7 @@
         <?php if ($_SESSION['role_id'] == 1) { ?>
         <li class="nav-item">
           <a href="user.php" class="nav-link active" id="user">
-            <i class="nav-icon fas fa-shopping-cart"></i>
+            <i class="nav-icon fas fa-user"></i>
             <p>
               Data Pengguna
             </p>
@@ -163,7 +168,7 @@
           </li>
           <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-credit-card"></i>
               <p>
                 Transaksi
                 <i class="right fas fa-angle-left"></i>
@@ -188,7 +193,7 @@
           <?php if ($_SESSION['role_id'] == 1) { ?>
           <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-file"></i>
               <p>
                 Laporan
                 <i class="right fas fa-angle-left"></i>
